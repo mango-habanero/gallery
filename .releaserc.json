@@ -1,0 +1,34 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "feat", "release": "minor"},
+        {"type": "fix", "release": "patch"},
+        {"type": "chore", "release": false}
+      ],
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES"]
+      }
+    },
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    {
+      "changelogFile": "docs/CHANGELOG.md",
+      "changelogTitle": "# Changelog"
+    },
+    "@semantic-release/github",
+    {
+      "assets": ["package.json", "package-lock.json", "CHANGELOG.md"],
+      "message": "chore(release): 🚀 ${nextRelease.version}. [skip ci]"
+    },
+    "@semantic-release/npm",
+    {
+      "npmPublish": false
+    },
+    "@semantic-release/git"
+  ],
+  "repositoryUrl": "https://github.com/mango-habanero/gallery.git"
+}
