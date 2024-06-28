@@ -17,6 +17,12 @@ jobs:
       contents: write
       issues: write
     steps:
+      - name: generate mango habanero bot app token.
+        uses: actions/create-github-app-token@v1
+        id: mh-bot-token
+        with:
+          app-id: ${{ vars.MH_BOT_APP_ID }}
+          private-key: ${{ secrets.MH_BOT_PRIVATE_KEY }}
       - name: checkout code.
         uses: actions/checkout@v4
         with:
@@ -29,5 +35,5 @@ jobs:
         run: npm ci
       - name: publish release.
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.mh-bot-token.outputs.token }}
         run: npx semantic-release
