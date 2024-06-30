@@ -6,13 +6,13 @@ import {cva, type VariantProps} from "class-variance-authority"
 import {cn} from "~/lib/utils"
 
 const buttonVariants = cva([
-    "h-9",
-    "w-60",
+    "h-[45px]",
+    "w-[257px]",
     "inline-flex",
     "items-center",
     "justify-center",
     "whitespace-nowrap",
-    "rounded-lg",
+    "rounded-[10px]",
     "text-base",
     "text-light",
     "font-normal",
