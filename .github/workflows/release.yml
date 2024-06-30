@@ -8,6 +8,7 @@ jobs:
   release:
     env:
       HUSKY: 0
+    environment: production
     name: release
     runs-on: ubuntu-latest
     permissions:
