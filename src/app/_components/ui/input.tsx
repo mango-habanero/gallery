@@ -1,12 +1,11 @@
-import * as React from "react"
+import React, {memo} from "react";
+import { cn } from "~/lib/utils";
+import { Label } from "@components/ui/label";
 
-import {cn} from "~/lib/utils"
-import {Label} from "@components/ui/label";
-
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, ...props }, ref) => {
+    ({ className, type = "text", ...props }, ref) => {
         return (
             <input
                 type={type}
@@ -17,19 +16,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 ref={ref}
                 {...props}
             />
-        )
+        );
     }
-)
-Input.displayName = "Input"
+);
+Input.displayName = "Input";
 
-
-function InputWithLabel() {
+const InputWithLabel: React.FC = memo(() => {
     return (
         <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="email">Email</Label>
             <Input type="email" id="email" placeholder="Email" />
         </div>
-    )
-}
+    );
+});
+InputWithLabel.displayName = "InputWithLabel";
 
-export { Input , InputWithLabel}
+export { Input, InputWithLabel };

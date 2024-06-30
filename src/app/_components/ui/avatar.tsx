@@ -2,26 +2,55 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import React, {forwardRef} from "react";
 
 import {cn} from "~/lib/utils";
-import {createFallbackAvatar} from "~/lib/avatar";
+import {cva, type VariantProps} from "cva";
 
 
-export const AvatarContainer = forwardRef<
+export const avatarVariants = cva(
+    "relative flex shrink-0 overflow-hidden rounded-full transition-all",
+    {
+        variants: {
+            size: {
+                default: "h-[45px] w-[45px]",
+                small: "h-[25px] w-[25px]",
+            },
+        },
+        defaultVariants: {
+            size: "default",
+        },
+    }
+);
+
+export interface AvatarProps extends
+    React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
+    VariantProps<typeof avatarVariants> {
+    transitionDuration?: string;
+}
+
+const Avatar = forwardRef<
     React.ElementRef<typeof AvatarPrimitive.Root>,
-    React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
->(({ className, ...props }, ref) => (
-    <AvatarPrimitive.Root
-        ref={ref}
-        className={cn(
-            "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
-            "bg-surface-100 dark:bg-surface-800",
-            className
-        )}
-        {...props}
-    />
-));
-AvatarContainer.displayName = AvatarPrimitive.Root.displayName;
+    AvatarProps
+>(
+    (
+        { className, size, transitionDuration = "0.3s", ...props },
+        ref
+    ) => (
+        <AvatarPrimitive.Root
+            ref={ref}
+            className={cn(
+                avatarVariants({ size }),
+                className
+            )}
+            style={{
+                transitionDuration,
+            }}
+            {...props}
+        />
+    )
+);
 
-export const AvatarImage = forwardRef<
+Avatar.displayName = AvatarPrimitive.Root.displayName;
+
+const AvatarImage = forwardRef<
     React.ElementRef<typeof AvatarPrimitive.Image>,
     React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
 >(({ className, ...props }, ref) => (
@@ -33,7 +62,7 @@ export const AvatarImage = forwardRef<
 ));
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
-export const AvatarFallback = forwardRef<
+const AvatarFallback = forwardRef<
     React.ElementRef<typeof AvatarPrimitive.Fallback>,
     React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
 >(({ className, ...props }, ref) => (
@@ -48,39 +77,4 @@ export const AvatarFallback = forwardRef<
 ));
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
-
-// TODO[MH]: Improve how we retrieve the first name that forms the seed for the avatar and the alt value.
-export default function Avatar({ alt, src, ...props }: React.HTMLAttributes<HTMLSpanElement> & {
-    src: string;
-    alt: string;
-}) {
-    let imageURI = src;
-    const isValidSrc = () => {
-        if (!src) return false;
-        const image = new Image();
-        image.src = src;
-        if (image.complete) {
-            return true;
-        } else {
-            image.onload = () => {
-                return true;
-            }
-            image.onerror = () => {
-                return false;
-            }
-        }
-    }
-
-    if (!isValidSrc()) {
-        imageURI = createFallbackAvatar(alt);
-    }
-
-    console.log(`URI: ${imageURI}`);
-    return (
-        <AvatarContainer {...props}>
-            <AvatarImage src={imageURI} alt={alt} />
-            <AvatarFallback>{alt}</AvatarFallback>
-        </AvatarContainer>
-    );
-}
-
+export { Avatar, AvatarImage, AvatarFallback };
